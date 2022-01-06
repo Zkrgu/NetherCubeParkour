@@ -14,7 +14,6 @@ import com.gmail.justbru00.nethercube.parkour.map.MapManager;
 public class PlayerData {
 
 	private UUID uuid;
-	private int currency;
 	private ArrayList<PlayerMapData> mapData = new ArrayList<PlayerMapData>();
 	
 	public static PlayerData getDataFor(OfflinePlayer p) {
@@ -24,17 +23,9 @@ public class PlayerData {
 			// Make the section as it does not exist.
 			String pathPre = p.getUniqueId().toString() + ".";
 			
-			dataFile.set(pathPre + "currency", 0);
-			
 			pathPre = p.getUniqueId().toString() + ".maps.";
 			
 			for (Map map : MapManager.getMaps()) {
-				if (map.getPurchaseCost() == Map.UNLOCKED_DEFAULT) {
-					dataFile.set(pathPre + map.getInternalName() + ".unlocked", true);
-				} else {
-					dataFile.set(pathPre + map.getInternalName() + ".unlocked", false);
-				}
-				
 				dataFile.set(pathPre + map.getInternalName() + ".attempts", 0);
 				dataFile.set(pathPre + map.getInternalName() + ".finishes", 0);
 				dataFile.set(pathPre + map.getInternalName() + ".besttime", (long) -1);
@@ -46,8 +37,6 @@ public class PlayerData {
 		
 		String prePath = p.getUniqueId().toString() + ".maps.";
 		
-		pd.setCurrency(dataFile.getInt(p.getUniqueId().toString() + ".currency"));
-		
 		Set<String> mapsFromData = dataFile.getConfigurationSection(p.getUniqueId().toString() + ".maps").getKeys(false);
 		
 		ArrayList<PlayerMapData> playerMapData = new ArrayList<PlayerMapData>();
@@ -56,8 +45,7 @@ public class PlayerData {
 			if (mapsFromData.contains(map.getInternalName())) {
 				// Get data for this map
 				PlayerMapData mapData = new PlayerMapData(map.getInternalName());
-				
-				mapData.setUnlocked(dataFile.getBoolean(prePath + map.getInternalName() + ".unlocked"));
+
 				mapData.setAttempts(dataFile.getInt(prePath + map.getInternalName() + ".attempts"));
 				mapData.setFinishes(dataFile.getInt(prePath + map.getInternalName() + ".finishes"));
 				mapData.setBestTime(dataFile.getLong(prePath + map.getInternalName() + ".besttime"));
@@ -65,20 +53,11 @@ public class PlayerData {
 				playerMapData.add(mapData);
 			} else {
 				// Create new section for this map
-				boolean unlocked;
-				if (map.getPurchaseCost() == Map.UNLOCKED_DEFAULT) {
-					dataFile.set(prePath + map.getInternalName() + ".unlocked", true);
-					unlocked = true;
-				} else {
-					dataFile.set(prePath + map.getInternalName() + ".unlocked", false);
-					unlocked = false;
-				}
-				
 				dataFile.set(prePath + map.getInternalName() + ".attempts", 0);
 				dataFile.set(prePath + map.getInternalName() + ".finishes", 0);
 				dataFile.set(prePath + map.getInternalName() + ".besttime", (long) -1);
 				dataFile.save();
-				playerMapData.add(new PlayerMapData(map.getInternalName(), unlocked, 0, 0, -1));
+				playerMapData.add(new PlayerMapData(map.getInternalName(), 0, 0, -1));
 			}
 		}
 		
@@ -91,14 +70,9 @@ public class PlayerData {
 	 * This is used after changing a value
 	 */
 	public void save() {
-		
-		// Currency
-		dataFile.set(uuid.toString() + ".currency", currency);
-		
 		// Player's map data
 		for (PlayerMapData pmd : mapData) {
 			String prePath = uuid.toString() + ".maps.";
-			dataFile.set(prePath + pmd.getInternalName() + ".unlocked", pmd.isUnlocked());							
 			dataFile.set(prePath + pmd.getInternalName() + ".attempts", pmd.getAttempts());
 			dataFile.set(prePath + pmd.getInternalName() + ".finishes", pmd.getFinishes());
 			dataFile.set(prePath + pmd.getInternalName() + ".besttime", pmd.getBestTime());
@@ -126,15 +100,6 @@ public class PlayerData {
 
 	public PlayerData setUuid(UUID uuid) {
 		this.uuid = uuid;
-		return this;
-	}
-
-	public int getCurrency() {
-		return currency;
-	}
-
-	public PlayerData setCurrency(int currency) {
-		this.currency = currency;
 		return this;
 	}
 

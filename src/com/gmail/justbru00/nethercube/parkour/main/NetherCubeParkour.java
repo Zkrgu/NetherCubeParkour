@@ -61,7 +61,6 @@ public class NetherCubeParkour extends JavaPlugin {
 		// REGISTER COMMANDS
 		getCommand("courses").setExecutor(new ParkourCommand());
 		getCommand("parkouradmin").setExecutor(new ParkourAdminCommand());
-		getCommand("parkourbalance").setExecutor(new ParkourBalanceCommand());
 		getCommand("parkourlobby").setExecutor(new ParkourLobbyCommand());
 		getCommand("parkourtp").setExecutor(new ParkourTpCommand());
 		getCommand("parkourstart").setExecutor(new ParkourStartCommand());
@@ -71,7 +70,6 @@ public class NetherCubeParkour extends JavaPlugin {
 		// REGISTER LISTENERS
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new MainGUIListener(), instance);
-		pm.registerEvents(new ConfirmGUIListener(), instance);
 		pm.registerEvents(new PressurePlateTriggerListener(), instance);
 		pm.registerEvents(new IceTrackListener(), instance);
 		

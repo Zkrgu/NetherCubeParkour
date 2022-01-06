@@ -16,7 +16,6 @@ public class Map {
 	private MapLength length;
 	private String creatorName;
 	private int rewardAmount;
-	private int purchaseCost;
 	private Location startPlateLocation;
 	private Location endingPlateLocation;
 	private Location spawnLocation;
@@ -26,7 +25,7 @@ public class Map {
 	}
 	
 	public Map(String internalName, ItemStack guiItem, MapDifficulty difficulty, MapLength length, String creatorName,
-			int rewardAmount, int purchaseCost, Location startPlateLocation, Location endingPlateLocation) {
+			int rewardAmount, Location startPlateLocation, Location endingPlateLocation) {
 		super();
 		this.internalName = internalName;
 		this.guiItem = guiItem;
@@ -34,7 +33,6 @@ public class Map {
 		this.length = length;
 		this.creatorName = creatorName;
 		this.rewardAmount = rewardAmount;
-		this.purchaseCost = purchaseCost;
 		this.startPlateLocation = startPlateLocation;
 		this.endingPlateLocation = endingPlateLocation;
 	}	
@@ -85,12 +83,6 @@ public class Map {
 	}
 	public void setRewardAmount(int rewardAmount) {
 		this.rewardAmount = rewardAmount;
-	}
-	public int getPurchaseCost() {
-		return purchaseCost;
-	}
-	public void setPurchaseCost(int purchaseCost) {
-		this.purchaseCost = purchaseCost;
 	}
 	public Location getStartPlateLocation() {
 		return startPlateLocation;

@@ -5,7 +5,6 @@ public class PlayerMapData {
 	public static final long NO_BEST_TIME = -1;
 
 	private String internalName;
-	private boolean unlocked;
 	private int attempts;
 	private int finishes;
 	/**
@@ -19,9 +18,8 @@ public class PlayerMapData {
 	
 	
 
-	public PlayerMapData(String internalName, boolean unlocked, int attempts, int finishes, long bestTime) {
+	public PlayerMapData(String internalName, int attempts, int finishes, long bestTime) {
 		this.internalName = internalName;
-		this.unlocked = unlocked;
 		this.attempts = attempts;
 		this.finishes = finishes;
 		this.bestTime = bestTime;
@@ -33,14 +31,6 @@ public class PlayerMapData {
 
 	public void setInternalName(String internalName) {
 		this.internalName = internalName;
-	}
-
-	public boolean isUnlocked() {
-		return unlocked;
-	}
-
-	public void setUnlocked(boolean unlocked) {
-		this.unlocked = unlocked;
 	}
 
 	public int getAttempts() {

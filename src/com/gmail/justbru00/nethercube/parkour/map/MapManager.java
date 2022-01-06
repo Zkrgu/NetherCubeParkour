@@ -39,7 +39,6 @@ public class MapManager {
 			m.setCreatorName(c.getString("maps." + mapKey + ".creatorname"));
 			m.setInternalName(mapKey);
 			m.setLength(MapLength.fromString(c.getString("maps." + mapKey +".length")));
-			m.setPurchaseCost(c.getInt(prePath + "purchasecost"));
 			m.setRewardAmount(c.getInt(prePath + "rewardamount"));
 			Location start;
 			Location end;

@@ -37,19 +37,10 @@ public class ParkourTpCommand implements CommandExecutor {
 						}
 
 						PlayerData pd = PlayerData.getDataFor(target);
-						// Does the player have this map unlocked?
-						if (pd.getMapData(map.getInternalName()).isUnlocked()) {
-							// TELEPORT PLAYER
-							target.teleport(map.getSpawnLocation(), TeleportCause.PLUGIN);
-							Messager.msgSender("&6Teleported " + target.getName() + " to the start of map "
-									+ map.getInternalName() + ".", sender);
-							return true;
-						} else {
-							Messager.msgSender("&c" + target.getName() + " doesn't have that map unlocked.", sender);
-							Messager.msgPlayer("&cSorry you don't have the map " + map.getInternalName() + " unlocked.",
-									target);
-							return true;
-						}
+						// TELEPORT PLAYER
+						target.teleport(map.getSpawnLocation(), TeleportCause.PLUGIN);
+						Messager.msgSender("&6Teleported " + target.getName() + " to the start of map " + map.getInternalName() + ".", sender);
+						return true;
 					} else {
 						Messager.msgSender("&cThe map '" + args[0] + "' could not be found. Is it spelled correctly?",
 								sender);

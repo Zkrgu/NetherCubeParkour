@@ -108,7 +108,7 @@ public class GUIManager {
 	
 	/**
 	 * Opens the main GUI for map selection, unlocking, and instant teleporting.
-	 * Players can left click to teleport to the start of unlocked maps
+	 * Players can left click to teleport to the start maps
 	 * Players can right click to purchase locked maps
 	 * @param p
 	 */
@@ -154,18 +154,7 @@ public class GUIManager {
 		
 		// First line - Unlock status and price if not unlocked
 		String firstLine;
-		if (pmd.isUnlocked()) {
-			// Unlocked 
-			firstLine = Messager.color("&a&lUNLOCKED: Left click to start");
-		} else {
-			if (map.getPurchaseCost() <= pd.getCurrency()) {
-				// Player can unlock this
-				firstLine = Messager.color("&aRight click to UNLOCK for " + map.getPurchaseCost());
-			} else {
-				// Player cannot unlock this
-				firstLine = Messager.color("&cRight click to UNLOCK for " + map.getPurchaseCost());
-			}
-		}
+		firstLine = Messager.color("&a&lLeft click to start");
 		// End First Line
 		
 		// Second Line - Finish reward
@@ -223,22 +212,20 @@ public class GUIManager {
 		loreToSet.add(fourthLine);
 		loreToSet.add(fifthLine);		
 		loreToSet.add(sixthLine);
-		
-		if (pmd.isUnlocked()) {
-			Messager.debug("Map is unlocked | GLOWING");
-				if (toReturn.getType() == Material.FISHING_ROD) {		
-					Messager.debug("ITEM IS FISHING ROD");
-					toReturn.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 4341);
-					ItemMeta meta = toReturn.getItemMeta();
-					meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);		
-					toReturn.setItemMeta(meta);
-				} else {		
-					Messager.debug("ITEM IS NOT FISHING ROD");
-					toReturn.addUnsafeEnchantment(Enchantment.LURE, 4341);				
-					ItemMeta meta = toReturn.getItemMeta();
-					meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);		
-					toReturn.setItemMeta(meta);
-				}
+
+		Messager.debug("Map is unlocked | GLOWING");
+		if (toReturn.getType() == Material.FISHING_ROD) {
+			Messager.debug("ITEM IS FISHING ROD");
+			toReturn.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 4341);
+			ItemMeta meta = toReturn.getItemMeta();
+			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+			toReturn.setItemMeta(meta);
+		} else {
+			Messager.debug("ITEM IS NOT FISHING ROD");
+			toReturn.addUnsafeEnchantment(Enchantment.LURE, 4341);
+			ItemMeta meta = toReturn.getItemMeta();
+			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+			toReturn.setItemMeta(meta);
 		}
 		
 		ItemMeta im = toReturn.getItemMeta();		

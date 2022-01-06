@@ -24,110 +24,11 @@ import com.gmail.justbru00.nethercube.parkour.map.MapManager;
 import com.gmail.justbru00.nethercube.parkour.utils.Messager;
 
 public class LeaderboardManager {
-	
-	private static List<String> balanceLeaderBoardLines = new ArrayList<String>();
 	private static List<String> fastestTimeBoardLines = new ArrayList<String>();
 	private static HashMap<String,Location> fastestTimeBoardLocations = new HashMap<String,Location>();
-	private static Location balanceLeaderBoardLocation;
 	private static HashMap<String, Hologram> fastestHolograms = new HashMap<String, Hologram>();
-	private static Hologram balanceHologram;
 	private static HolographicDisplaysAPI hologramsDisplayAPI = HolographicDisplaysAPIProvider.getImplementation().getHolographicDisplaysAPI(NetherCubeParkour.getInstance());
 
-	public static void updateBalanceLeaderboard() {
-		if (!NetherCubeParkour.enableLeaderboards) {
-			return;
-		}
-		Location loc = balanceLeaderBoardLocation;
-		
-		ArrayList<PlayerData> allTheData = new ArrayList<PlayerData>();
-		
-		for (String key : NetherCubeParkour.dataFile.getKeys(false)) {
-			try {
-				allTheData.add(PlayerData.getDataFor(Bukkit.getOfflinePlayer(UUID.fromString(key))));
-			} catch (Exception e) {
-				Messager.debug("&cFailed to get data for uuid: " + key);
-			}
-		}
-		
-		HashMap<UUID, Integer> dataMap = new HashMap<UUID, Integer>();
-		
-		for (PlayerData v : allTheData) {
-			dataMap.put(v.getUuid(), v.getCurrency());
-		}
-		// Get the top ten
-		Map<UUID, Integer> topTen = dataMap.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-				.limit(10).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-		
-		
-		List<String> textLines = new ArrayList<String>();
-		
-		ArrayList<UUID> orderedIds = new ArrayList<UUID>();
-		
-		for (Entry<UUID, Integer> entry : topTen.entrySet()) {
-			orderedIds.add(entry.getKey());		
-		}
-		
-		for (String line : balanceLeaderBoardLines) {
-			// Replace names
-			for (int i = 1; i <= 10; i++) {
-				String name;				
-				try {
-					name = Bukkit.getOfflinePlayer(orderedIds.get(i-1)).getName();
-				} catch (IndexOutOfBoundsException e) {
-					name = "Empty";
-				}
-				
-				if (name == null) {
-					name = "Empty";
-				}
-				
-				line = line.replace("{name" + i +"}", name);
-			}
-			
-			// Replace Balance
-			for (int i = 1; i <= 10; i++) {
-				String currency;				
-				try {
-					currency = String.valueOf(topTen.get(orderedIds.get(i-1)));
-				} catch (IndexOutOfBoundsException e) {
-					currency = "none";
-				}
-				
-				line = line.replace("{bal" + i +"}", currency);
-			}
-			
-			textLines.add(line);
-		}
-		Bukkit.getScheduler().runTask(NetherCubeParkour.getInstance(), new Runnable() {
-			
-			@Override
-			public void run() {
-				// Update actual hologram
-				Hologram holo;
-				if (balanceHologram == null) {
-					holo = hologramsDisplayAPI.createHologram(loc);
-					balanceHologram = holo;
-				} else {
-					holo = balanceHologram;
-				}		
-
-				HologramLines hololines = holo.getLines();
-				hololines.clear();
-				
-				for (String line : textLines) {
-					hololines.appendText(Messager.color(line));
-				}
-				Messager.debug("[LeaderManager] Finished updating balance leaderboard.");				
-			}
-		});
-	}
-	
-	public static void updateBalanceLeaderboard(CommandSender toNotify) {
-		updateBalanceLeaderboard();
-		Messager.msgSender("&aUpdated the balance leaderboard successfully.", toNotify);
-	}
-	
-	
 	public static void updateFastestTimeLeaderboard(String mapInternalName) {
 		if (!NetherCubeParkour.enableLeaderboards) {
 			return;
@@ -259,8 +160,7 @@ public class LeaderboardManager {
 			@Override
 			public void run() {
 				Messager.debug("Starting auto leaderboard update.");
-				updateAllFastestTimeLeaderboard();		
-				updateBalanceLeaderboard();
+				updateAllFastestTimeLeaderboard();
 				Messager.debug("Finished auto leaderboard update.");
 			}
 		}, 30*20, ticksBetweenUpdates);
@@ -271,15 +171,6 @@ public class LeaderboardManager {
 		
 		// Clear to allow for reloading
 		fastestTimeBoardLocations.clear();
-		
-		// Load balance leaderboard location
-		balanceLeaderBoardLocation = new Location(Bukkit.getWorld(config.getString("leaderboards.topbalance.location.world")),
-				config.getDouble("leaderboards.topbalance.location.x"),
-				config.getDouble("leaderboards.topbalance.location.y"), 
-				config.getDouble("leaderboards.topbalance.location.z"));
-		
-		// Load balance leaderboard lines
-		balanceLeaderBoardLines = config.getStringList("leaderboards.topbalance.lines");
 		
 		// Load Fastest Time leaderboard lines
 		fastestTimeBoardLines = config.getStringList("leaderboards.fastesttime.lines");
