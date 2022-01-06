@@ -10,12 +10,14 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.beta.hologram.HologramLines;
+import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.beta.internal.HolographicDisplaysAPIProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.justbru00.nethercube.parkour.data.PlayerData;
 import com.gmail.justbru00.nethercube.parkour.main.NetherCubeParkour;
 import com.gmail.justbru00.nethercube.parkour.map.MapManager;
@@ -29,6 +31,7 @@ public class LeaderboardManager {
 	private static Location balanceLeaderBoardLocation;
 	private static HashMap<String, Hologram> fastestHolograms = new HashMap<String, Hologram>();
 	private static Hologram balanceHologram;
+	private static HolographicDisplaysAPI hologramsDisplayAPI = HolographicDisplaysAPIProvider.getImplementation().getHolographicDisplaysAPI(NetherCubeParkour.getInstance());
 
 	public static void updateBalanceLeaderboard() {
 		if (!NetherCubeParkour.enableLeaderboards) {
@@ -102,16 +105,17 @@ public class LeaderboardManager {
 				// Update actual hologram
 				Hologram holo;
 				if (balanceHologram == null) {
-					holo = HologramsAPI.createHologram(NetherCubeParkour.getInstance(), loc);
+					holo = hologramsDisplayAPI.createHologram(loc);
 					balanceHologram = holo;
 				} else {
 					holo = balanceHologram;
 				}		
-				
-				holo.clearLines();
+
+				HologramLines hololines = holo.getLines();
+				hololines.clear();
 				
 				for (String line : textLines) {
-					holo.appendTextLine(Messager.color(line));
+					hololines.appendText(Messager.color(line));
 				}
 				Messager.debug("[LeaderManager] Finished updating balance leaderboard.");				
 			}
@@ -200,16 +204,17 @@ public class LeaderboardManager {
 				// Hologram naming method: fastest_mapinternalname - If I could name them lol
 				Hologram holo;
 				if (fastestHolograms.get(mapInternalName) == null) {
-					holo = HologramsAPI.createHologram(NetherCubeParkour.getInstance(), loc);
+					holo = hologramsDisplayAPI.createHologram(loc);
 					fastestHolograms.put(mapInternalName, holo);
 				} else {
 					holo = fastestHolograms.get(mapInternalName);
 				}		
-				
-				holo.clearLines();
+
+				HologramLines hololines = holo.getLines();
+				hololines.clear();
 				
 				for (String line : textLines) {
-					holo.appendTextLine(Messager.color(line));
+					hololines.appendText(Messager.color(line));
 				}
 				Messager.debug("[LeaderManager] Finished updating fastest time leaderboard for " + map.getInternalName() + ".");				
 			}

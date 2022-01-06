@@ -153,7 +153,7 @@ public class PlayerTimer {
 	 * @param p
 	 * @param m
 	 */
-	public static void playerEndedMap(Player p, Map m) {		
+	public static void playerEndedMap(Player p, Map m) {
 		Instant endTime = Instant.now();
 		
 		if (!playersInMaps.containsKey(p.getUniqueId())) {

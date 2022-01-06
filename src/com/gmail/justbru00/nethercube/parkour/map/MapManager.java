@@ -26,7 +26,7 @@ public class MapManager {
 	public static void init() {	
 		maps = new ArrayList<Map>();
 		FileConfiguration c = NetherCubeParkour.getInstance().getConfig();
-		Set<String> mapKeys = c.getConfigurationSection("maps").getKeys(false);		
+		Set<String> mapKeys = c.getConfigurationSection("maps").getKeys(false);
 		
 		for (String mapKey : mapKeys) {
 			Map m = new Map(mapKey);
