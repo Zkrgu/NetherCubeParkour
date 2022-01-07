@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.gmail.justbru00'
+version '1.4.2-INDEV'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        url 'https://repo.codemc.io/repository/maven-public'
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:1.7.0'
+    implementation 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
+    implementation 'me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0-SNAPSHOT'
+}
+
