@@ -3,6 +3,7 @@ package com.gmail.justbru00.nethercube.parkour.listeners;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,8 +43,11 @@ public class MainGUIListener implements Listener {
 						if (e.getClick() == ClickType.LEFT || e.getClick() == ClickType.SHIFT_LEFT) {
 								// Ensure that the player is not in a map
 							PlayerTimer.playerLeavingMap((Player) e.getWhoClicked(), false);
-							String mapName = ChatColor.stripColor(item.getItemMeta().getLore().get(5));
-							e.getWhoClicked().teleport(MapManager.getMap(mapName).getSpawnLocation(), TeleportCause.PLUGIN);
+							String mapName = ChatColor.stripColor(item.getItemMeta().getLore().get(4));
+
+							Location spawnLocation = MapManager.getMap(mapName).getSpawnLocation();
+							if(spawnLocation != null) e.getWhoClicked().teleport(spawnLocation, TeleportCause.PLUGIN);
+							else Messager.msgPlayer("Map does not have a spawn point", (Player) e.getWhoClicked());
 						}
 					}
 				}

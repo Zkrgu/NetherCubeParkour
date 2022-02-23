@@ -1,9 +1,18 @@
 package com.gmail.justbru00.nethercube.parkour.main;
 
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import co.aikar.commands.PaperCommandManager;
+import com.gmail.justbru00.nethercube.parkour.map.Map;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +37,8 @@ public class NetherCubeParkour extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		MapManager.saveMaps(getConfig());
+		saveConfig();
 		Messager.msgConsole("&cThe plugin is disabled.");
 		instance = null;
 	}
@@ -72,7 +83,20 @@ public class NetherCubeParkour extends JavaPlugin {
 		pm.registerEvents(new MainGUIListener(), instance);
 		pm.registerEvents(new PressurePlateTriggerListener(), instance);
 		pm.registerEvents(new IceTrackListener(), instance);
-		
+
+		PaperCommandManager manager = new PaperCommandManager(instance);
+		manager.registerCommand(new CourseCommand());
+		manager.registerCommand(new LeaderboardCommand());
+
+		manager.getCommandCompletions().registerCompletion("loc", c -> {
+			Player pl = c.getPlayer();
+			Location target = pl.getTargetBlock((Set<Material>) null,6).getLocation();
+			if(pl.getLocation().distance(target) > 5) target = pl.getLocation();
+			return ImmutableList.of(target.getBlockX()+" "+target.getBlockY()+" "+target.getBlockZ());
+		});
+		manager.getCommandCompletions().registerCompletion("course", c -> {
+			return ImmutableList.copyOf(MapManager.getMapNames());
+		});
 	}
 	
 	public static NetherCubeParkour getInstance() {

@@ -157,61 +157,35 @@ public class GUIManager {
 		firstLine = Messager.color("&a&lLeft click to start");
 		// End First Line
 		
-		// Second Line - Finish reward
-		String secondLine;
-		
-		int reward = 0;
-		if (pmd.getFinishes() == 0) {
-			reward = map.getRewardAmount();
-		} else if (pmd.getFinishes() == 1) {
-			reward = (int) (.75 * map.getRewardAmount());
-		} else if (pmd.getFinishes() == 2) {
-			reward = (int) (.50 * map.getRewardAmount());
-		} else if (pmd.getFinishes() == 3) {
-			reward = (int) (.25 * map.getRewardAmount());
-		}  else {
-			// over 4 times finished
-			reward = 0;
-		}
-			
-		if (reward <= 0) {
-			reward = 0;
-		}
-		
-		secondLine = Messager.color("&7Finish reward: &e" + reward);
-		
-		// End Second Line
-		
 		// Third Line - Players best time for this map
-		String thirdLine;
+		String secondLine;
 		
 		Messager.debug("Best time is: " + pmd.getBestTime());
 		if (pmd.getBestTime() == PlayerMapData.NO_BEST_TIME) {
-			thirdLine = Messager.color("&7Your best time: &eNever Finished");
+			secondLine = Messager.color("&7Your best time: &eNever Finished");
 		} else {
-			thirdLine = Messager.color("&7Your best time: &e" + Messager.formatAsTime(pmd.getBestTime()));
+			secondLine = Messager.color("&7Your best time: &e" + Messager.formatAsTime(pmd.getBestTime()));
 		}
 		
 		// End Third Line
 		
 		// Fourth Line - Times Finished for the player
-		String fourthLine = Messager.color("&7Times finished: &e" + pmd.getFinishes());
+		String thirdLine = Messager.color("&7Times finished: &e" + pmd.getFinishes());
 		// End fourth line
 		
 		// Fifth line
-		String fifthLine = Messager.color("&7Attempts: &e" + pmd.getAttempts());
-		// End fifthLine
+		String fourthLine = Messager.color("&7Attempts: &e" + pmd.getAttempts());
+		// End fourthLine
 		
 		// Sixth Line - This maps internal name. Important for the Confirm GUI.
-		String sixthLine = Messager.color("&7" + map.getInternalName());
+		String fifthLine = Messager.color("&7" + map.getInternalName());
 		// End Sixth line
 		
 		loreToSet.add(firstLine);
 		loreToSet.add(secondLine);
 		loreToSet.add(thirdLine);
 		loreToSet.add(fourthLine);
-		loreToSet.add(fifthLine);		
-		loreToSet.add(sixthLine);
+		loreToSet.add(fifthLine);
 
 		Messager.debug("Map is unlocked | GLOWING");
 		if (toReturn.getType() == Material.FISHING_ROD) {

@@ -1,9 +1,12 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java'
 }
 
 group 'com.gmail.justbru00'
 version '1.4.2-INDEV'
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
@@ -13,12 +16,25 @@ repositories {
     maven {
         url 'https://repo.codemc.io/repository/maven-public'
     }
+    maven {
+        url 'https://repo.aikar.co/content/groups/aikar/'
+    }
+}
+
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:1.7.0'
     implementation 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
-    implementation 'me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0-SNAPSHOT'
+    compileOnly 'me.filoghost.holographicdisplays:holographicdisplays-api:3.0.0-SNAPSHOT'
+    implementation 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
+}
+shadowJar {
+    relocate 'co.aikar.commands', 'com.gmail.justbru00.nethercube.parkour.acf'
+    relocate 'co.aikar.locales', 'com.gmail.justbru00.nethercube.parkour.locales'
 }
 
+build.dependsOn shadowJar
