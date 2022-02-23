@@ -6,6 +6,7 @@ public enum MapLength {
 	
 	
 	public static MapLength fromString(String s) {
+		if(s == null) return null;
 		if (s.equalsIgnoreCase("short")) {
 			return SHORT;
 		} else if (s.equalsIgnoreCase("medium")) {

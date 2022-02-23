@@ -27,13 +27,15 @@ public class LeaderboardManager {
 	private static List<String> fastestTimeBoardLines = new ArrayList<String>();
 	private static HashMap<String,Location> fastestTimeBoardLocations = new HashMap<String,Location>();
 	private static HashMap<String, Hologram> fastestHolograms = new HashMap<String, Hologram>();
-	private static HolographicDisplaysAPI hologramsDisplayAPI = HolographicDisplaysAPIProvider.getImplementation().getHolographicDisplaysAPI(NetherCubeParkour.getInstance());
+	private static HolographicDisplaysAPI hologramsDisplayAPI = HolographicDisplaysAPI.get(NetherCubeParkour.getInstance());
 
 	public static void updateFastestTimeLeaderboard(String mapInternalName) {
 		if (!NetherCubeParkour.enableLeaderboards) {
 			return;
 		}
 		Location loc = fastestTimeBoardLocations.get(mapInternalName);
+
+		if(loc == null) return;
 		
 		com.gmail.justbru00.nethercube.parkour.map.Map map = MapManager.getMap(mapInternalName);
 		
@@ -120,7 +122,7 @@ public class LeaderboardManager {
 				Messager.debug("[LeaderManager] Finished updating fastest time leaderboard for " + map.getInternalName() + ".");				
 			}
 		});
-		
+
 	}
 	
 	/**

@@ -6,6 +6,7 @@ public enum MapDifficulty {
 	
 	
 	public static MapDifficulty fromString(String s) {
+		if(s == null) return null;
 		if (s.equalsIgnoreCase("easy")) {
 			return EASY;
 		} else if (s.equalsIgnoreCase("normal")) {
