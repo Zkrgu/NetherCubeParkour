@@ -41,7 +41,7 @@ public class CourseCommand extends BaseCommand {
         @Subcommand("spawn")
         @Description("Set course spawn location")
         @CommandCompletion("@course @loc")
-        @Syntax("<map> <pos> [yaw] <pitch>")
+        @Syntax("<course> <pos> [yaw] <pitch>")
         public void setCourseSpawn(Player sender, String course, Double x, Double y, Double z, @Optional Float yaw, Float pitch) {
             World world = sender.getWorld();
             Location loc;
@@ -62,7 +62,7 @@ public class CourseCommand extends BaseCommand {
         @Subcommand("start")
         @Description("Set course start location")
         @CommandCompletion("@course @loc")
-        @Syntax("<map> <pos>")
+        @Syntax("<course> <pos>")
         public void setCourseStart(Player sender, String course, Double x, Double y, Double z) {
             World world = sender.getWorld();
             Location loc = new Location(world,x,y,z);
@@ -77,7 +77,7 @@ public class CourseCommand extends BaseCommand {
         @Subcommand("end")
         @Description("Set course end location")
         @CommandCompletion("@course @loc")
-        @Syntax("<map> <pos>")
+        @Syntax("<course> <pos>")
         public void setCourseEnd(Player sender, String course, Double x, Double y, Double z) {
             World world = sender.getWorld();
             Location loc = new Location(world,x,y,z);
@@ -93,6 +93,7 @@ public class CourseCommand extends BaseCommand {
         @Subcommand("creator")
         @Description("Set course creator")
         @CommandCompletion("@course")
+        @Syntax("<course> <creator>")
         public void setCourseCreator(Player sender, String course, String creator) {
             Map map = MapManager.getMap(course);
             if(map!=null){
@@ -119,6 +120,23 @@ public class CourseCommand extends BaseCommand {
         }
         PlayerTimer.playerStartingMap(p, MapManager.getMap(course));
         Messager.msgSender("&aAttempted to start the player " + p.getDisplayName() + " on the course " + course, sender);
+    }
+    @Subcommand("checkpoint")
+    @Description("Activate the checkpoint for a given player")
+    @CommandCompletion("@course @Players")
+    @Syntax("<course> [player]")
+    public static void activateCheckpoint(CommandSender sender, String course, @Optional Player p){
+        if(p == null){
+            if(sender instanceof Player){
+                p = (Player) sender;
+            }
+            else{
+                Messager.msgSender("&cCannot start course, no player selected.", sender);
+                return;
+            }
+        }
+        PlayerTimer.playerCheckpointMap(p, MapManager.getMap(course));
+        Messager.msgSender("&aAttempted to activate checkpoint for the player " + p.getDisplayName() + " on the course " + course, sender);
     }
     @Subcommand("stop")
     @Description("Finish a course for a given player")

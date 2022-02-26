@@ -1,13 +1,13 @@
 package com.gmail.justbru00.nethercube.parkour.utils;
 
-import java.util.Arrays;
-
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import java.util.Arrays;
 
 public class ItemBuilder {
 

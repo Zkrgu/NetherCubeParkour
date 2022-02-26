@@ -1,7 +1,7 @@
 name: NetherCubeParkour
 main: com.gmail.justbru00.nethercube.parkour.main.NetherCubeParkour
-version: 1.4.2-INDEV
-authors: [JustBru00,Justin Brubaker]
+version: 1.6-RC5
+authors: [JustBru00,Justin Brubaker,SethTheLasersloth]
 softdepend: [HolographicDisplays]
 api-version: 1.16
 commands:
@@ -23,3 +23,7 @@ commands:
     description: Ends the given course for the given player.    
   boatkill:
     description: Kills all boats that do not have players riding in them.  
+  parkourcheckpoint:
+    description: Activates mandatory hidden checkpoint for the given player.  
+  toptimes:
+    description: Allows the user to list the top times for a course.  

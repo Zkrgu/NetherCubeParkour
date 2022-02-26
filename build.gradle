@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.gmail.justbru00'
-version '1.4.2-INDEV'
+version '1.6-RC5'
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
