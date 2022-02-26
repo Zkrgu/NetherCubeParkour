@@ -1,27 +1,20 @@
 package com.gmail.justbru00.nethercube.parkour.leaderboards;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
-import me.filoghost.holographicdisplays.api.beta.hologram.HologramLines;
-import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.beta.internal.HolographicDisplaysAPIProvider;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import com.gmail.justbru00.nethercube.parkour.data.PlayerData;
 import com.gmail.justbru00.nethercube.parkour.main.NetherCubeParkour;
 import com.gmail.justbru00.nethercube.parkour.map.MapManager;
 import com.gmail.justbru00.nethercube.parkour.utils.Messager;
+import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.beta.hologram.HologramLines;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class LeaderboardManager {
 	private static List<String> fastestTimeBoardLines = new ArrayList<String>();
@@ -43,7 +36,7 @@ public class LeaderboardManager {
 		
 		for (String key : NetherCubeParkour.dataFile.getKeys(false)) {
 			try {
-				allTheData.add(PlayerData.getDataFor(Bukkit.getOfflinePlayer(UUID.fromString(key))));
+				allTheData.add(PlayerData.getDataFor(UUID.fromString(key)));
 			} catch (Exception e) {
 				Messager.debug("&cFailed to get data for uuid: " + key);
 			}
@@ -87,7 +80,7 @@ public class LeaderboardManager {
 			
 			// Replace Times
 			for (int i = 1; i <= 10; i++) {
-				String time;				
+				String time;
 				try {
 					time = Messager.formatAsTime(topTen.get(orderedIds.get(i-1)));
 				} catch (IndexOutOfBoundsException e) {
@@ -105,14 +98,8 @@ public class LeaderboardManager {
 			public void run() {
 				// Update actual hologram
 				// Hologram naming method: fastest_mapinternalname - If I could name them lol
-				Hologram holo;
-				if (fastestHolograms.get(mapInternalName) == null) {
-					holo = hologramsDisplayAPI.createHologram(loc);
-					fastestHolograms.put(mapInternalName, holo);
-				} else {
-					holo = fastestHolograms.get(mapInternalName);
-				}		
-
+				Hologram holo = fastestHolograms.computeIfAbsent(mapInternalName, k -> hologramsDisplayAPI.createHologram(loc));
+				if(!holo.getPosition().toLocation().equals(loc)) holo.setPosition(loc);
 				HologramLines hololines = holo.getLines();
 				hololines.clear();
 				
@@ -184,5 +171,29 @@ public class LeaderboardManager {
 		}
 		
 	}
-	
+
+	public static void setLeaderboardPosition(String course, Location loc) {
+		if(fastestTimeBoardLocations.containsKey(course)){
+			fastestTimeBoardLocations.replace(course, loc);
+		}else {
+			fastestTimeBoardLocations.put(course, loc);
+		}
+		Messager.msgConsole(fastestTimeBoardLocations.get(course).toString());
+	}
+	public static void saveLeaderboardPositions(FileConfiguration c){
+		for(Entry<String, Location> courseLoc : fastestTimeBoardLocations.entrySet()){
+			String course = courseLoc.getKey();
+			Location loc = courseLoc.getValue();
+
+			saveLeaderboardPosition(c, "leaderboards.fastesttime.locations", course, loc);
+		}
+		Messager.msgConsole("Saved all leaderboard positions.");
+	}
+	public static void saveLeaderboardPosition(FileConfiguration c, String root, String course, Location loc){
+		String basePath = root + "." + course + ".";
+		c.set(basePath + "x", loc.getX());
+		c.set(basePath + "y", loc.getY());
+		c.set(basePath + "z", loc.getZ());
+		c.set(basePath + "world", loc.getWorld().getName());
+	}
 }

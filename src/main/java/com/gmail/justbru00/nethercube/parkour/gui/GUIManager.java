@@ -1,10 +1,12 @@
 package com.gmail.justbru00.nethercube.parkour.gui;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-
+import com.gmail.justbru00.nethercube.parkour.data.PlayerData;
+import com.gmail.justbru00.nethercube.parkour.data.PlayerMapData;
+import com.gmail.justbru00.nethercube.parkour.map.Map;
+import com.gmail.justbru00.nethercube.parkour.map.MapManager;
+import com.gmail.justbru00.nethercube.parkour.utils.ItemBuilder;
+import com.gmail.justbru00.nethercube.parkour.utils.Messager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,12 +17,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.gmail.justbru00.nethercube.parkour.data.PlayerData;
-import com.gmail.justbru00.nethercube.parkour.data.PlayerMapData;
-import com.gmail.justbru00.nethercube.parkour.map.Map;
-import com.gmail.justbru00.nethercube.parkour.map.MapManager;
-import com.gmail.justbru00.nethercube.parkour.utils.ItemBuilder;
-import com.gmail.justbru00.nethercube.parkour.utils.Messager;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GUIManager {
 
@@ -144,7 +142,7 @@ public class GUIManager {
 	 */
 	private static ItemStack getMapItemFor(Player p, String mapInternalName) {
 		
-		PlayerData pd = PlayerData.getDataFor(p);
+		PlayerData pd = PlayerData.getDataFor(p.getUniqueId());
 		PlayerMapData pmd = pd.getMapData(mapInternalName);
 		Map map = MapManager.getMap(mapInternalName);
 		

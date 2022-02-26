@@ -1,10 +1,10 @@
 package com.gmail.justbru00.nethercube.parkour.timer;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.UUID;
-
+import com.gmail.justbru00.nethercube.parkour.data.PlayerData;
+import com.gmail.justbru00.nethercube.parkour.data.PlayerMapData;
+import com.gmail.justbru00.nethercube.parkour.main.NetherCubeParkour;
+import com.gmail.justbru00.nethercube.parkour.map.Map;
+import com.gmail.justbru00.nethercube.parkour.utils.Messager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -12,13 +12,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.gmail.justbru00.nethercube.parkour.data.PlayerData;
-import com.gmail.justbru00.nethercube.parkour.data.PlayerMapData;
-import com.gmail.justbru00.nethercube.parkour.main.NetherCubeParkour;
-import com.gmail.justbru00.nethercube.parkour.map.Map;
-import com.gmail.justbru00.nethercube.parkour.utils.Messager;
-
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.UUID;
 
 public class PlayerTimer {
 
@@ -35,24 +33,24 @@ public class PlayerTimer {
 		
 		FileConfiguration config = NetherCubeParkour.getInstance().getConfig();
 		// Load lobby location
-		Location loc = new Location(Bukkit.getWorld(config.getString("lobbylocation.world")), 
+		Location loc = new Location(Bukkit.getWorld(config.getString("lobbylocation.world")),
 				config.getDouble("lobbylocation.x"), config.getDouble("lobbylocation.y"), config.getDouble("lobbylocation.z"));
 		LOBBY_LOCATION = loc;
 		
 		
 		// Time display repeating task
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(NetherCubeParkour.getInstance(), new Runnable() {
-			
+
 			@Override
 			public void run() {
-				
+
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					if (PlayerTimer.isPlayerInMap(p)) {
-						PlayerData pd = PlayerData.getDataFor(p);
+						PlayerData pd = PlayerData.getDataFor(p.getUniqueId());
 						PlayerMapData pmd = pd.getMapData(playersInMaps.get(p.getUniqueId()).getInternalName());
-						
+
 						long mapTime = Duration.between(playerMapStartTime.get(p.getUniqueId()), Instant.now()).toMillis();
-						
+
 						if (pmd.getBestTime() == -1) {
 							// The default value is still saved. This is currently their best time
 							Messager.sendActionBar("&a" + Messager.formatAsTime(mapTime), p);
@@ -65,7 +63,7 @@ public class PlayerTimer {
 						}
 					}
 				}
-				
+
 			}
 		}, 5, 5);
 	}
@@ -130,7 +128,7 @@ public class PlayerTimer {
 		playersInMapsBoatUuids.put(p.getUniqueId(), boatUuid);
 		
 		// Add one attempt to the stats
-		PlayerData pd = PlayerData.getDataFor(p);
+		PlayerData pd = PlayerData.getDataFor(p.getUniqueId());
 		PlayerMapData pmd = pd.getMapData(m.getInternalName());
 		
 		pmd.setAttempts(pmd.getAttempts() + 1);
@@ -190,7 +188,7 @@ public class PlayerTimer {
 			return;
 		}
 		
-		PlayerData pd = PlayerData.getDataFor(p);
+		PlayerData pd = PlayerData.getDataFor(p.getUniqueId());
 		PlayerMapData pmd = pd.getMapData(m.getInternalName());		
 		
 		long mapTime = Duration.between(playerMapStartTime.get(p.getUniqueId()), endTime).toMillis();

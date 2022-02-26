@@ -1,29 +1,27 @@
 package com.gmail.justbru00.nethercube.parkour.data;
 
-import static com.gmail.justbru00.nethercube.parkour.main.NetherCubeParkour.dataFile;
+import com.gmail.justbru00.nethercube.parkour.map.Map;
+import com.gmail.justbru00.nethercube.parkour.map.MapManager;
 
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.OfflinePlayer;
-
-import com.gmail.justbru00.nethercube.parkour.map.Map;
-import com.gmail.justbru00.nethercube.parkour.map.MapManager;
+import static com.gmail.justbru00.nethercube.parkour.main.NetherCubeParkour.dataFile;
 
 public class PlayerData {
 
 	private UUID uuid;
 	private ArrayList<PlayerMapData> mapData = new ArrayList<PlayerMapData>();
 	
-	public static PlayerData getDataFor(OfflinePlayer p) {
-		PlayerData pd = new PlayerData(p.getUniqueId());
+	public static PlayerData getDataFor(UUID id) {
+		PlayerData pd = new PlayerData(id);
 		
-		if (dataFile.getConfigurationSection(p.getUniqueId().toString()) == null) {
+		if (dataFile.getConfigurationSection(id.toString()) == null) {
 			// Make the section as it does not exist.
-			String pathPre = p.getUniqueId().toString() + ".";
-			
-			pathPre = p.getUniqueId().toString() + ".maps.";
+			String pathPre = id.toString() + ".";
+
+			pathPre = id.toString() + ".maps.";
 			
 			for (Map map : MapManager.getMaps()) {
 				dataFile.set(pathPre + map.getInternalName() + ".attempts", 0);
@@ -35,9 +33,9 @@ public class PlayerData {
 		
 		// Get all data from config.
 		
-		String prePath = p.getUniqueId().toString() + ".maps.";
+		String prePath = id.toString() + ".maps.";
 		
-		Set<String> mapsFromData = dataFile.getConfigurationSection(p.getUniqueId().toString() + ".maps").getKeys(false);
+		Set<String> mapsFromData = dataFile.getConfigurationSection(id.toString() + ".maps").getKeys(false);
 		
 		ArrayList<PlayerMapData> playerMapData = new ArrayList<PlayerMapData>();
 		
@@ -112,6 +110,21 @@ public class PlayerData {
 		return this;
 	}
 	
-	
+	public static void resetMapTimeByUUID(UUID id, String course){
+		PlayerData pd = PlayerData.getDataFor(id);
+		if(course.equalsIgnoreCase("all")){
+			for (PlayerMapData data : pd.mapData) {
+				data.setBestTime(-1L);
+			}
+			pd.save();
+		}else{
+			PlayerMapData mapData = pd.getMapData(course);
+			if (mapData == null) {
+				return;
+			}
+			mapData.setBestTime(-1L);
+			pd.save();
+		}
+	}
 	
 }
